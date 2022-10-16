@@ -1,7 +1,7 @@
 import tensorflow as tf
 import tensorflow_probability as tfp
 
-#Test comment
+
 
 def get_multiquestion_loss(question_index_groups, reduction=tf.keras.losses.Reduction.SUM):
     """
