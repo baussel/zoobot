@@ -29,7 +29,7 @@ file_format = "png"
 #Batch size
 batch_size = 128
 
-def main(path_labels,path_images):
+def main(path_labels,path_images,path_weights):
     #Read in the dataset
     df = pd.read_csv(path_labels)
 
@@ -39,7 +39,7 @@ def main(path_labels,path_images):
     print("Number of labelled galaxies:",len(df))
 
     hubble_schema = schemas.Schema(label_metadata.gz_hubble_pairs,label_metadata.gz_hubble_dependencies)
-    apply_model_regression(df,"1",hubble_schema,gz_hubble.gz_hubble_trafo_answers,gz_hubble.gz_hubble_trafo_total)
+    apply_model_regression(df,"1",path_weights,hubble_schema,gz_hubble.gz_hubble_trafo_answers,gz_hubble.gz_hubble_trafo_total)
 
 def check_for_images(paths,labels):
     """
@@ -95,7 +95,7 @@ def prepare_dataset(data,schema,trafo_answers,trafo_total):
     assert set(paths_train).intersection(set(paths_val)) == set()  # check there's no train/val overlap
 
     file_format = 'png'
-    batch_size = 128  # 128 for paper, you'll need a very good GPU. 8 for debugging, 64 for RTX 2070, 256 for A100
+    batch_size = 128 
 
     raw_train_dataset = image_datasets.get_image_dataset(
         paths_train,
@@ -129,12 +129,12 @@ def prepare_dataset(data,schema,trafo_answers,trafo_total):
 
     return train_dataset, val_dataset, paths_train, paths_val
 
-def prepare_model_votes(schema):
+def prepare_model_votes(schema,checkpoint_dir):
     """
         Prepares the pretrained regression model for the finetuning.
     """
     #checkpoint_dir = '/content/zoobot/replicated_train_only_greyscale_tf'
-    checkpoint_dir = '/content/drive/MyDrive/MPE/2022_Ben_Aussel/Zoobot/efficientnet_dr5_tensorflow_greyscale_catalog_debug'
+    #checkpoint_dir = '/content/drive/MyDrive/MPE/2022_Ben_Aussel/Zoobot/efficientnet_dr5_tensorflow_greyscale_catalog_debug'
 
     checkpoint_loc = os.path.join(checkpoint_dir, 'checkpoint')
 
@@ -392,7 +392,7 @@ def mean_deviation_half(schema,trafo_answers,trafo_total,save_path,save_name,mod
 
     return predictions_complete,labels_complete,deviations_answers,num_answers
 
-def apply_model_regression(dataset,run_number,schema,trafo_answers,trafo_total):
+def apply_model_regression(dataset,run_number,path_weights,schema,trafo_answers,trafo_total):
     """
         Finetunes the pretrained Zoobot model to a given binary problem and evaluates the performance.
         Predicts number of volunteers choosing certain answer to a binary question for all binary questions simultaneously.
@@ -411,7 +411,7 @@ def apply_model_regression(dataset,run_number,schema,trafo_answers,trafo_total):
     print("____________________________________\n")
     print("---- 2) PREPARE MODEL ----")
     print("____________________________________\n")
-    model = prepare_model_votes(schema)
+    model = prepare_model_votes(schema,path_weights)
     print("____________________________________\n")
     print("---- 3) TRAIN MODEL ----")
     print("____________________________________\n")
