@@ -18,6 +18,7 @@ from zoobot.tensorflow.estimators import define_model, preprocess, custom_layers
 from zoobot.tensorflow.predictions import predict_on_dataset
 from zoobot.tensorflow.training import training_config, losses
 from zoobot.tensorflow.transfer_learning import utils
+from zoobot.tensorflow.datasets import gz_hubble
 
 #Image parameters
 initial_size = 300 
@@ -420,4 +421,6 @@ def apply_model_regression(dataset,run_number,schema,trafo_answers,trafo_total):
     mean_deviation_half(schema,trafo_answers,trafo_total,save_path,save_name="val_predictions.csv")
     predict_on_dataset_reg(list(dataset["id_str"]),trained_model,save_path,dataset,schema)
 
-apply_model_regression(df,"1",hubble_schema,hubble_trafo_answers,hubble_trafo_total)
+hubble_schema = schemas.Schema(label_metadata.gz_hubble_pairs,label_metadata.gz_hubble_dependencies)
+
+apply_model_regression(df,"1",hubble_schema,gz_hubble.gz_hubble_trafo_answers,gz_hubble.gz_hubble_trafo_total)
