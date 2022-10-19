@@ -75,8 +75,7 @@ def get_paths_and_labels(data,schema,trafo_answers,trafo_total):
             number_votes = data[trafo_total[questions[j]]].iloc[i]
             for k in range(answer_indices[j][0],answer_indices[j][1]+1):
                 label_dict[answers[k]] = np.round(data[trafo_answers[answers[k]]].iloc[i]*number_votes)
-        image_id = np.array(data["ObjNo"].iloc[i])
-        paths.append(data["id_str"])
+        paths.append(data["id_str"].iloc[i])
         labels.append(label_dict)
     return paths, labels
 
