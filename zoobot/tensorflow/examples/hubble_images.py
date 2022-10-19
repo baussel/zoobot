@@ -29,7 +29,7 @@ file_format = "png"
 #Batch size
 batch_size = 128
 
-def main(path_labels,path_images,path_weights):
+def main(path_labels,path_images,path_weights,save_path):
     #Read in the dataset
     df = pd.read_csv(path_labels)
 
@@ -39,7 +39,7 @@ def main(path_labels,path_images,path_weights):
     print("Number of labelled galaxies:",len(df))
 
     hubble_schema = schemas.Schema(label_metadata.gz_hubble_pairs,label_metadata.gz_hubble_dependencies)
-    apply_model_regression(df,"1",path_weights,hubble_schema,gz_hubble.gz_hubble_trafo_answers,gz_hubble.gz_hubble_trafo_total)
+    apply_model_regression(df,"1",path_weights,hubble_schema,gz_hubble.gz_hubble_trafo_answers,gz_hubble.gz_hubble_trafo_total,save_path)
 
 def check_for_images(paths,labels):
     """
@@ -392,14 +392,13 @@ def mean_deviation_half(schema,trafo_answers,trafo_total,save_path,save_name,mod
 
     return predictions_complete,labels_complete,deviations_answers,num_answers
 
-def apply_model_regression(dataset,run_number,path_weights,schema,trafo_answers,trafo_total):
+def apply_model_regression(dataset,run_number,path_weights,schema,trafo_answers,trafo_total,save_path):
     """
         Finetunes the pretrained Zoobot model to a given binary problem and evaluates the performance.
         Predicts number of volunteers choosing certain answer to a binary question for all binary questions simultaneously.
     """
     print("--------- ZOOBOT - Regression --------")
     print("____________________________________\n")
-    save_path = "/content/drive/MyDrive/MPE/2022_Ben_Aussel/Results/regression_hubble/full_decision_tree/run_{}/".format(run_number)
     if not os.path.exists(save_path):
         os.makedirs(save_path)
     print("APPLY MODEL TO QUESTIONS: {} ".format(list(schema.question_answer_pairs.keys())))
