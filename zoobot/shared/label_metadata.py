@@ -257,6 +257,50 @@ decals_ortho_dependencies = {
     }
 
 
+# Galaxy Zoo Hubble decision tree
+gz_hubble_pairs = {
+    'smooth-or-features': ['_smooth','_features-or-disk','_star-or-artifact'],
+    'disk-edge-on': ['_yes','_no'],
+    'bar': ['_bar','_no-bar'],
+    'spiral': ['_spiral','_no-spiral'],
+    'bulge-prominence': ['_no-bulge','_just-noticable','_obvious','_dominant'],
+    'odd': ['_yes','_no'],
+    'rounded': ['_completely-round','_in-between','_cigar-shaped'],
+    'odd-feature': ['_ring','_lens-or-arc','_disturbed','_irregular','_other','_merger','_dust-lane'],
+    'bulge-shape': ['_rounded','_boxy','_no-bulge'],
+    'arms-winding': ['_tight','_medium','_loose'],
+    'arms-number': ['_1','_2','_3','_4','_more-than-4','_cant_tell'],
+    'clumpy': ['_yes','_no'],
+    'bright-clump': ['_yes','_no'],
+    'bright-clump-central': ['_yes','_no'],
+    'clumps-arrangement': ['_line','_chain','_cluster','_spiral'],
+    'clumps-count': ['_1','_2','_3','_4','_more-than-4','_cant-tell'],
+    'clumps-symmetrical': ['_yes','_no'],
+    'clumps-embedded': ['_yes','_no'],
+}
+
+gz_hubble_dependencies = {
+    'smooth-or-features': None,
+    'disk-edge-on': 'clumpy_no',
+    'bar': 'disk-edge-on_no',
+    'spiral': 'disk-edge-on_no',
+    'bulge-prominence': 'disk-edge-on_no',
+    'odd': None,
+    'rounded': 'smooth-or-features_smooth',
+    'odd-feature': 'odd_yes',
+    'bulge-shape': 'disk-edge-on_yes',
+    'arms-winding': 'spiral_spiral',
+    'arms-number': 'spiral_spiral',
+    'clumpy': 'smooth-or-features_features-or-disk',
+    'bright-clump': 'clumpy_yes', 
+    'bright-clump-central': 'bright-clump_yes', 
+    'clumps-arrangement': 'clumpy_yes', 
+    'clumps-count': 'clumpy_yes',
+    'clumps-symmetrical': 'clumpy_yes',
+    'clumps-embedded': 'clumpy_yes',
+}
+
+
 rings_pairs = {
     'ring': ['_yes', '_no']
 }
