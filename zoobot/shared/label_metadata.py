@@ -278,6 +278,7 @@ gz_hubble_pairs = {
     'clumps-symmetrical': ['_yes','_no'],
     'clumps-embedded': ['_yes','_no'],
 }
+gz_hubble_questions, gz_hubble_label_cols = extract_questions_and_label_cols(gz_hubble_pairs)
 
 gz_hubble_dependencies = {
     'smooth-or-features': None,
