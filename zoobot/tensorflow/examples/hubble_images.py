@@ -30,7 +30,7 @@ file_format = "png"
 batch_size = 128
 
 #Read in the dataset
-df = pd.read_csv("/content/drive/MyDrive/MPE/2022_Ben_Aussel/Data/Hubble_COSMOS_labels_complete.csv")
+df = pd.read_csv("zoobot/data/Euclid_galaxy_classification_challenge_volunteer_classifications.csv")
 
 #Add the id_str column that contains the path to each image
 paths = ["/content/content/pngs_hubble_complete/cosmos_acs_" + str(image_id) + ".png" for image_id in df["ObjNo"]]
