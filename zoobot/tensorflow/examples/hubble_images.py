@@ -29,14 +29,17 @@ file_format = "png"
 #Batch size
 batch_size = 128
 
-#Read in the dataset
-df = pd.read_csv("zoobot/data/Euclid_galaxy_classification_challenge_volunteer_classifications.csv")
+def main(path_labels,path_images):
+    #Read in the dataset
+    df = pd.read_csv(path_labels)
 
-#Add the id_str column that contains the path to each image
-paths = ["/content/content/pngs_hubble_complete/cosmos_acs_" + str(image_id) + ".png" for image_id in df["ObjNo"]]
-df["id_str"] = paths
+    #Add the id_str column that contains the path to each image
+    paths = [path_images + "/cosmos_acs_" + str(image_id) + ".png" for image_id in df["ObjNo"]]
+    df["id_str"] = paths
+    print("Number of labelled galaxies:",len(df))
 
-print("Number of labelled galaxies:",len(df))
+    hubble_schema = schemas.Schema(label_metadata.gz_hubble_pairs,label_metadata.gz_hubble_dependencies)
+    apply_model_regression(df,"1",hubble_schema,gz_hubble.gz_hubble_trafo_answers,gz_hubble.gz_hubble_trafo_total)
 
 def check_for_images(paths,labels):
     """
@@ -73,7 +76,7 @@ def get_paths_and_labels(data,schema,trafo_answers,trafo_total):
             for k in range(answer_indices[j][0],answer_indices[j][1]+1):
                 label_dict[answers[k]] = np.round(data[trafo_answers[answers[k]]].iloc[i]*number_votes)
         image_id = np.array(data["ObjNo"].iloc[i])
-        paths.append("/content/content/pngs_hubble_complete/cosmos_acs_" + str(image_id) + ".png")
+        paths.append(data["id_str"])
         labels.append(label_dict)
     return paths, labels
 
@@ -420,7 +423,3 @@ def apply_model_regression(dataset,run_number,schema,trafo_answers,trafo_total):
     predict_on_dataset_reg(paths_val,trained_model,save_path,dataset,schema,save_name="val_predictions.csv")
     mean_deviation_half(schema,trafo_answers,trafo_total,save_path,save_name="val_predictions.csv")
     predict_on_dataset_reg(list(dataset["id_str"]),trained_model,save_path,dataset,schema)
-
-hubble_schema = schemas.Schema(label_metadata.gz_hubble_pairs,label_metadata.gz_hubble_dependencies)
-
-apply_model_regression(df,"1",hubble_schema,gz_hubble.gz_hubble_trafo_answers,gz_hubble.gz_hubble_trafo_total)
