@@ -78,8 +78,8 @@ def train_estimator(model, train_config, train_dataset, test_dataset, extra_call
             histogram_freq=0,  # don't log all the internal histograms, possibly slow
             write_images=False,  # this actually writes the weights, terrible name
             write_graph=False,
-            # profile_batch='2,10' 
-            profile_batch=0   # i.e. disable profiling
+            profile_batch='2,10' 
+            #profile_batch=0   # i.e. disable profiling
         ),
         tf.keras.callbacks.ModelCheckpoint(
             filepath=checkpoint_name,
